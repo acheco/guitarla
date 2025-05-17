@@ -1,11 +1,6 @@
 import Logo from "./Logo.jsx";
-import {useMemo} from "react";
 
-export default function Header({cart, removeItem, clearCart, incrementQuantity, decrementQuantity}) {
-
-  const totalPrice = useMemo(() => cart.reduce((total, item) => total + item.price * item.quantity, 0), [cart])
-  const isEmpty = useMemo(() => cart.length === 0, [cart])
-
+export default function Header({cart, removeItem, clearCart, incrementQuantity, decrementQuantity, totalPrice, isEmpty}) {
   return (
     <header className="py-5 header">
       <div className="container-xl">

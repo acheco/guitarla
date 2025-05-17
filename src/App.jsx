@@ -1,77 +1,31 @@
 import Header from "./components/Header.jsx";
 import Guitar from "./components/Guitar.jsx";
-import {db} from "./data/db.js";
-import {useEffect, useState} from "react";
+import useCart from "./hooks/useCart.js";
 
 function App() {
 
-  const initialCart = () => {
-    const localStorageCart = localStorage.getItem('cart')
-    return localStorageCart
-      ? JSON.parse(localStorageCart)
-      : []
-  }
-
-  const [guitars] = useState(db)
-  const [cart, setCart] = useState(initialCart)
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart))
-  }, [cart])
-
-  function addToCart(item) {
-
-    const itemExists = cart.findIndex((cartItem) => cartItem.id === item.id)
-
-    if (itemExists >= 0) { // Si el item existe en el carrito solo incrementamos la cantidad.
-      const updatedCart = [...cart]
-      updatedCart[itemExists].quantity++
-      setCart(updatedCart)
-    } else {
-      item.quantity = 1
-      setCart([...cart, item])
-    }
-
-  }
-
-  function incrementQuantity(item) {
-    const findItem = cart.findIndex((cartItem) => cartItem.id === item.id)
-    const updatedCart = [...cart]
-    updatedCart[findItem].quantity++
-    setCart(updatedCart)
-  }
-
-  function decrementQuantity(item) {
-    const findItem = cart.findIndex((cartItem) => cartItem.id === item.id)
-
-    if (cart[findItem].quantity === 1) {
-      removeItem(item.id)
-      return
-    }
-
-    const updatedCart = [...cart]
-    updatedCart[findItem].quantity--
-    setCart(updatedCart)
-  }
-
-  function removeItem(id) {
-    const updatedCart = cart.filter((item) => item.id !== id)
-    setCart(updatedCart)
-  }
-
-  function clearCart() {
-    setCart([])
-  }
+  const {
+    guitars,
+    cart,
+    addToCart,
+    incrementQuantity,
+    decrementQuantity,
+    removeItem,
+    clearCart,
+    totalPrice,
+    isEmpty,
+  } = useCart()
 
   return (
     <>
-
       <Header
         cart={cart}
         removeItem={removeItem}
         clearCart={clearCart}
         incrementQuantity={incrementQuantity}
         decrementQuantity={decrementQuantity}
+        totalPrice={totalPrice}
+        isEmpty={isEmpty}
       />
 
       <main className="container-xl mt-5">
