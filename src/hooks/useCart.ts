@@ -1,22 +1,23 @@
 import {useEffect, useMemo, useState} from "react";
 import {db} from "../data/db.js";
+import {CartItem, Guitar} from "../types";
 
 function useCart() {
-  const initialCart = () => {
+  const initialCart = (): CartItem[] => {
     const localStorageCart = localStorage.getItem('cart')
     return localStorageCart
       ? JSON.parse(localStorageCart)
       : []
   }
 
-  const [guitars] = useState(db)
+  const [data] = useState(db)
   const [cart, setCart] = useState(initialCart)
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart))
   }, [cart])
 
-  function addToCart(item) {
+  function addToCart(item: Guitar) {
 
     const itemExists = cart.findIndex((cartItem) => cartItem.id === item.id)
 
@@ -25,20 +26,20 @@ function useCart() {
       updatedCart[itemExists].quantity++
       setCart(updatedCart)
     } else {
-      item.quantity = 1
-      setCart([...cart, item])
+      const newItem: CartItem = {...item, quantity: 1}
+      setCart([...cart, newItem])
     }
 
   }
 
-  function incrementQuantity(item) {
+  function incrementQuantity(item: Guitar) {
     const findItem = cart.findIndex((cartItem) => cartItem.id === item.id)
     const updatedCart = [...cart]
     updatedCart[findItem].quantity++
     setCart(updatedCart)
   }
 
-  function decrementQuantity(item) {
+  function decrementQuantity(item: Guitar) {
     const findItem = cart.findIndex((cartItem) => cartItem.id === item.id)
 
     if (cart[findItem].quantity === 1) {
@@ -51,7 +52,7 @@ function useCart() {
     setCart(updatedCart)
   }
 
-  function removeItem(id) {
+  function removeItem(id: Number) {
     const updatedCart = cart.filter((item) => item.id !== id)
     setCart(updatedCart)
   }
@@ -64,7 +65,7 @@ function useCart() {
   const isEmpty = useMemo(() => cart.length === 0, [cart])
 
   return {
-    guitars,
+    guitars: data,
     cart,
     addToCart,
     incrementQuantity,

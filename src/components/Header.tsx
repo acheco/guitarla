@@ -1,6 +1,24 @@
-import Logo from "./Logo.jsx";
+import Logo from "./Logo.js";
+import {CartItem, Guitar} from "../types";
 
-export default function Header({cart, removeItem, clearCart, incrementQuantity, decrementQuantity, totalPrice, isEmpty}) {
+type HeaderProps = {
+  cart: CartItem[],
+  removeItem: (id: Number) => void,
+  clearCart: () => void,
+  incrementQuantity: (item: Guitar) => void,
+  decrementQuantity: (item: Guitar) => void,
+  totalPrice: number,
+  isEmpty: boolean,
+}
+export default function Header({
+                                 cart,
+                                 removeItem,
+                                 clearCart,
+                                 incrementQuantity,
+                                 decrementQuantity,
+                                 totalPrice,
+                                 isEmpty
+                               }: HeaderProps) {
   return (
     <header className="py-5 header">
       <div className="container-xl">
